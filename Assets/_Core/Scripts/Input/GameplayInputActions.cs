@@ -26,6 +26,45 @@ namespace HoofGame.InputActions
     ""name"": ""Gameplay"",
     ""maps"": [
         {
+            ""name"": ""Start"",
+            ""id"": ""678682b8-2823-45da-b789-146047ec0012"",
+            ""actions"": [
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ed992e3-de26-4a5d-9ea7-1868c635ba18"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""4f798b56-297e-45f6-a502-20a9190f08e5"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15415bb5-26f9-42e4-b059-5ba54a61f924"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""Hoove"",
             ""id"": ""a63bf469-b1fb-40f6-9e7a-f0e0970d0f68"",
             ""actions"": [
@@ -98,6 +137,9 @@ namespace HoofGame.InputActions
     ],
     ""controlSchemes"": []
 }");
+            // Start
+            m_Start = asset.FindActionMap("Start", throwIfNotFound: true);
+            m_Start_Click = m_Start.FindAction("Click", throwIfNotFound: true);
             // Hoove
             m_Hoove = asset.FindActionMap("Hoove", throwIfNotFound: true);
             m_Hoove_Position = m_Hoove.FindAction("Position", throwIfNotFound: true);
@@ -158,6 +200,39 @@ namespace HoofGame.InputActions
             return asset.FindBinding(bindingMask, out action);
         }
 
+        // Start
+        private readonly InputActionMap m_Start;
+        private IStartActions m_StartActionsCallbackInterface;
+        private readonly InputAction m_Start_Click;
+        public struct StartActions
+        {
+            private @GameplayInputActions m_Wrapper;
+            public StartActions(@GameplayInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Click => m_Wrapper.m_Start_Click;
+            public InputActionMap Get() { return m_Wrapper.m_Start; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(StartActions set) { return set.Get(); }
+            public void SetCallbacks(IStartActions instance)
+            {
+                if (m_Wrapper.m_StartActionsCallbackInterface != null)
+                {
+                    @Click.started -= m_Wrapper.m_StartActionsCallbackInterface.OnClick;
+                    @Click.performed -= m_Wrapper.m_StartActionsCallbackInterface.OnClick;
+                    @Click.canceled -= m_Wrapper.m_StartActionsCallbackInterface.OnClick;
+                }
+                m_Wrapper.m_StartActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Click.started += instance.OnClick;
+                    @Click.performed += instance.OnClick;
+                    @Click.canceled += instance.OnClick;
+                }
+            }
+        }
+        public StartActions @Start => new StartActions(this);
+
         // Hoove
         private readonly InputActionMap m_Hoove;
         private IHooveActions m_HooveActionsCallbackInterface;
@@ -198,6 +273,10 @@ namespace HoofGame.InputActions
             }
         }
         public HooveActions @Hoove => new HooveActions(this);
+        public interface IStartActions
+        {
+            void OnClick(InputAction.CallbackContext context);
+        }
         public interface IHooveActions
         {
             void OnPosition(InputAction.CallbackContext context);

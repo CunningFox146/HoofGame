@@ -1,26 +1,19 @@
-﻿using System;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace HoofGame.Horse
 {
-    [RequireComponent(typeof(MeshRenderer))]
     public class Hoof : MonoBehaviour
     {
+        [SerializeField] private MeshRenderer _meshRenderer;
         [SerializeField] private Vector2 _cleanSize;
 
-        private MeshRenderer _meshRenderer;
-        private Material _material;
         private Texture2D _mask;
-
         private int _dirtyPixelsCount;
         private int _pixelsCount;
         private Color32[] _savedPixels;
 
-        private void Awake()
-        {
-            _meshRenderer = GetComponent<MeshRenderer>();
-            _material = _meshRenderer.material;
-        }
+        public float CleanPercent => Mathf.Max(0f, _dirtyPixelsCount / (float)_pixelsCount);
 
         private void Start()
         {
@@ -29,7 +22,6 @@ namespace HoofGame.Horse
 
         public void Clean(Vector2 textureCoord)
         {
-            Debug.Log(textureCoord);
             int pixelX = (int)(textureCoord.x * _mask.width);
             int pixelY = (int)(textureCoord.y * _mask.height);
 
@@ -50,9 +42,10 @@ namespace HoofGame.Horse
 
             _mask.Apply();
         }
+
         public void SaveState()
         {
-            _savedPixels = _mask.GetPixels32(0);
+            _savedPixels = _mask?.GetPixels32(0);
         }
 
         public void RollbackState()
@@ -63,7 +56,10 @@ namespace HoofGame.Horse
 
         private void CreateTexture()
         {
-            var mainText = _material.GetTexture("_MainTex");
+            var material = _meshRenderer.material;
+            var mainText = material.GetTexture("_MainTex");
+            var alphaTex = (Texture2D)material.GetTexture("_AlphaMask");
+
             _mask = new Texture2D(mainText.width, mainText.height);
             for (int y = 0; y < _mask.height; y++)
             {
@@ -72,9 +68,11 @@ namespace HoofGame.Horse
                     _mask.SetPixel(x, y, Color.white);
                 }
             }
+
             _mask.Apply();
-            _material.SetTexture("_Mask", _mask);
-            _pixelsCount = _dirtyPixelsCount = _mask.height * _mask.width;
+            material.SetTexture("_Mask", _mask);
+
+            _pixelsCount = _dirtyPixelsCount = alphaTex.GetPixels().Count(e => e == Color.white);
         }
 
     }

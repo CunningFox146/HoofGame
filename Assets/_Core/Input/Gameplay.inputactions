@@ -2,6 +2,45 @@
     "name": "Gameplay",
     "maps": [
         {
+            "name": "Start",
+            "id": "678682b8-2823-45da-b789-146047ec0012",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "6ed992e3-de26-4a5d-9ea7-1868c635ba18",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4f798b56-297e-45f6-a502-20a9190f08e5",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "15415bb5-26f9-42e4-b059-5ba54a61f924",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Hoove",
             "id": "a63bf469-b1fb-40f6-9e7a-f0e0970d0f68",
             "actions": [

@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace HoofGame.Horse
 {
-    public class Horse : MonoBehaviour
+    public class HorseAnimation : MonoBehaviour
     {
         private static readonly int StandUpHash = Animator.StringToHash("StandUp");
         private static readonly int WinHash = Animator.StringToHash("Win");
@@ -10,7 +11,7 @@ namespace HoofGame.Horse
 
         [SerializeField] private Animator _animator;
 
-        private void Start()
+        internal void StandUp()
         {
             _animator.SetTrigger(StandUpHash);
         }
