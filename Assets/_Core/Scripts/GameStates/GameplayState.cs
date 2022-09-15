@@ -1,6 +1,7 @@
 ﻿using HoofGame.Cameras;
 using HoofGame.Horse;
 using HoofGame.Infrastructure;
+using HoofGame.Levels;
 
 namespace HoofGame.GameStates
 {
@@ -9,6 +10,8 @@ namespace HoofGame.GameStates
         private HorseAnimation _horse;
         private Hoof _hoof;
         private CameraSystem _cameraSystem;
+        private float _dirtPercentTarget;
+        private LevelSystem _levelSystem;
 
         public GameplayState()
         {
@@ -16,6 +19,8 @@ namespace HoofGame.GameStates
             _cameraSystem = container.CameraSystem;
             _hoof = container.Hoof;
             _horse = container.Horse;
+            _levelSystem = LevelSystem.Instance;
+            _dirtPercentTarget = _levelSystem.CurrentLevel.WinPercent;
         }
 
         public void OnEnter()
@@ -35,8 +40,9 @@ namespace HoofGame.GameStates
 
         private void OnCleanPercentChanged(float dirtPercent)
         {
-            if (dirtPercent < 0.3f)
+            if (dirtPercent < _dirtPercentTarget)
             {
+                _levelSystem.LevelPassed();
                 GameState.CurrentState = new GameEndState();
             }
         }
