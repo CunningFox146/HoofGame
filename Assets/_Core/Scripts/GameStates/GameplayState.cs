@@ -2,6 +2,7 @@
 using HoofGame.Horse;
 using HoofGame.Infrastructure;
 using HoofGame.Levels;
+using HoofGame.UI;
 
 namespace HoofGame.GameStates
 {
@@ -12,6 +13,7 @@ namespace HoofGame.GameStates
         private CameraSystem _cameraSystem;
         private float _dirtPercentTarget;
         private LevelSystem _levelSystem;
+        private ViewSystem _viewSystem;
 
         public GameplayState()
         {
@@ -21,6 +23,7 @@ namespace HoofGame.GameStates
             _horse = container.Horse;
             _levelSystem = LevelSystem.Instance;
             _dirtPercentTarget = _levelSystem.CurrentLevel.WinPercent;
+            _viewSystem = container.ViewSystem;
         }
 
         public void OnEnter()
@@ -28,6 +31,8 @@ namespace HoofGame.GameStates
             _cameraSystem.SetCamera(CameraType.Gameplay);
             _hoof.gameObject.SetActive(true);
             _horse.StandUp();
+            _viewSystem.HideAllViews();
+            _viewSystem.ShowView<GameplayView>();
 
             _hoof.DirtPercentChanged += OnCleanPercentChanged;
         }

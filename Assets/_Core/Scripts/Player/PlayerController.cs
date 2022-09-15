@@ -2,14 +2,19 @@
 using HoofGame.Infrastructure;
 using HoofGame.InputActions;
 using HoofGame.Util;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.WSA;
 
 namespace HoofGame.Player
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private Transform _knife;
+        public event Action TooFast;
+        public event Action SmallRange;
+
+        [SerializeField] private Knife _knife;
         [SerializeField] private float _minDistance = 10f;
         [SerializeField] private float _maxSpeed = 10f;
 
@@ -36,7 +41,9 @@ namespace HoofGame.Player
             var currentPos = new Vector2(_startPos.x, Mathf.Max(_startPos.y, ClickPos.y));
             if (Vector2.Distance(_lastPos, currentPos) >= _maxSpeed)
             {
-                StopCleaning();
+                TooFast?.Invoke();
+                _knife.StopCleaning(true);
+                _clicked = false;
                 _hoof.RollbackState();
                 return;
             }
@@ -44,7 +51,7 @@ namespace HoofGame.Player
             var ray = _camera.ScreenPointToRay(currentPos);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << (int)Layers.Hoof))
             {
-                _knife.position = hit.point;
+                _knife.UpdatePos(hit.point);
                 _hoof.Clean(hit.textureCoord);
             }
             _lastPos = currentPos;
@@ -58,28 +65,25 @@ namespace HoofGame.Player
             _inputActions.Hoove.Click.canceled += OnClickCanceledHandler;
         }
 
-        private void StopCleaning()
-        {
-            _knife.gameObject.SetActive(false);
-            _clicked = false;
-        }
-
         private void OnClickCanceledHandler(InputAction.CallbackContext _)
         {
             if (!_clicked) return;
-            StopCleaning();
+
+            _clicked = false;
             if (Vector2.Distance(_startPos, ClickPos) < _minDistance)
             {
+                SmallRange?.Invoke();
+                _knife.StopCleaning(true);
                 _hoof.RollbackState();
                 return;
             }
             _hoof.UpdateDirtPerncent();
+            _knife.StopCleaning();
         }
 
         private void OnClickHandler(InputAction.CallbackContext _)
         {
             if (_clicked) return;
-            _knife.gameObject.SetActive(true);
             _startPos = ClickPos;
             _lastPos = _startPos;
             _clicked = true;

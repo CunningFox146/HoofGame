@@ -2,6 +2,7 @@
 using HoofGame.Horse;
 using HoofGame.Infrastructure;
 using HoofGame.InputActions;
+using HoofGame.UI;
 using UnityEngine.InputSystem;
 
 namespace HoofGame.GameStates
@@ -13,6 +14,7 @@ namespace HoofGame.GameStates
         private CameraSystem _cameraSystem;
         private SceneSystem _sceneSystem;
         private GameplayInputActions _inputActions;
+        private ViewSystem _viewSystem;
 
         public GameEndState()
         {
@@ -22,6 +24,7 @@ namespace HoofGame.GameStates
             _cameraSystem = container.CameraSystem;
             _inputActions = container.GameplayInputActions;
             _sceneSystem = container.SceneSystem;
+            _viewSystem = container.ViewSystem;
         }
 
         public void OnEnter()
@@ -29,6 +32,10 @@ namespace HoofGame.GameStates
             _horse.StartWin();
             _hoof.gameObject.SetActive(false);
             _cameraSystem.SetCamera(CameraType.End);
+
+            _viewSystem.HideAllViews();
+            _viewSystem.ShowView<GameEndView>();
+
             _inputActions.Hoove.Disable();
             _inputActions.Start.Enable();
             _inputActions.Start.Click.performed += OnClickHandler;

@@ -29,7 +29,7 @@ namespace HoofGame.Levels
         private void LoadCurrentLevel()
         {
             int savedLevel = PlayerPrefs.GetInt(nameof(CurrentLevel));
-            if (savedLevel > _levels.Count)
+            if (savedLevel > _levels.Count - 1)
             {
                 savedLevel = Random.Range(0, _levels.Count - 1);
             }

@@ -53,6 +53,7 @@ namespace HoofGame.Horse
 
         public void RollbackState()
         {
+            if (_savedPixels is null) return;
             _mask.SetPixels32(_savedPixels);
             _mask.Apply();
         }

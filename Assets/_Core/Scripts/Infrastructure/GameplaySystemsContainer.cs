@@ -3,6 +3,7 @@ using HoofGame.GameStates;
 using HoofGame.Horse;
 using HoofGame.InputActions;
 using HoofGame.Player;
+using HoofGame.UI;
 using UnityEngine;
 
 namespace HoofGame.Infrastructure
@@ -16,6 +17,7 @@ namespace HoofGame.Infrastructure
         [field: SerializeField] public HorseAnimation Horse { get; private set; }
         [field: SerializeField] public CameraSystem CameraSystem { get; private set; }
         [field: SerializeField] public SceneSystem SceneSystem { get; private set; }
+        [field: SerializeField] public ViewSystem ViewSystem { get; private set; }
         public GameplayInputActions GameplayInputActions { get; private set; }
 
         private void Awake()
