@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace HoofGame.Horse
 {
     public class Hoof : MonoBehaviour
     {
+        public event Action<float> DirtPercentChanged;
+
         [SerializeField] private MeshRenderer _meshRenderer;
         [SerializeField] private Vector2 _cleanSize;
 
@@ -13,7 +16,7 @@ namespace HoofGame.Horse
         private int _pixelsCount;
         private Color32[] _savedPixels;
 
-        public float CleanPercent => Mathf.Max(0f, _dirtyPixelsCount / (float)_pixelsCount);
+        public float DirtPercent => Mathf.Max(0f, _dirtyPixelsCount / (float)_pixelsCount);
 
         private void Start()
         {
@@ -32,10 +35,10 @@ namespace HoofGame.Horse
                     Color pixelDirtMask = _mask.GetPixel(pixelX + x, pixelY + y);
                     if (pixelDirtMask != Color.black)
                     {
-                        _dirtyPixelsCount--;
                         _mask.SetPixel(pixelX + x,
                             pixelY + y,
                             Color.black);
+                        _dirtyPixelsCount--;
                     }
                 }
             }
@@ -52,6 +55,11 @@ namespace HoofGame.Horse
         {
             _mask.SetPixels32(_savedPixels);
             _mask.Apply();
+        }
+
+        public void UpdateDirtPerncent()
+        {
+            DirtPercentChanged?.Invoke(DirtPercent);
         }
 
         private void CreateTexture()

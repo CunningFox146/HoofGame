@@ -15,5 +15,10 @@ namespace HoofGame.Horse
         {
             _animator.SetTrigger(StandUpHash);
         }
+
+        internal void StartWin()
+        {
+            _animator.SetTrigger(WinHash);
+        }
     }
 }

@@ -1,27 +1,44 @@
 ﻿using HoofGame.Cameras;
+using HoofGame.Horse;
 using HoofGame.Infrastructure;
 
 namespace HoofGame.GameStates
 {
     public class GameplayState : IGameState
     {
-        private GameplaySystemsContainer _container;
+        private HorseAnimation _horse;
+        private Hoof _hoof;
+        private CameraSystem _cameraSystem;
 
         public GameplayState()
         {
-            _container = GameplaySystemsContainer.Instance;
+            var container = GameplaySystemsContainer.Instance;
+            _cameraSystem = container.CameraSystem;
+            _hoof = container.Hoof;
+            _horse = container.Horse;
         }
 
         public void OnEnter()
         {
-            _container.CameraSystem.SetCamera(CameraType.Gameplay);
-            _container.Hoof.gameObject.SetActive(true);
-            _container.Horse.StandUp();
+            _cameraSystem.SetCamera(CameraType.Gameplay);
+            _hoof.gameObject.SetActive(true);
+            _horse.StandUp();
+
+            _hoof.DirtPercentChanged += OnCleanPercentChanged;
         }
 
         public void OnExit()
         {
-            _container.Hoof.gameObject.SetActive(true);
+            _hoof.gameObject.SetActive(true);
+            _hoof.DirtPercentChanged -= OnCleanPercentChanged;
+        }
+
+        private void OnCleanPercentChanged(float dirtPercent)
+        {
+            if (dirtPercent < 0.3f)
+            {
+                GameState.CurrentState = new GameEndState();
+            }
         }
     }
 }

@@ -2,7 +2,6 @@
 using HoofGame.Infrastructure;
 using HoofGame.InputActions;
 using HoofGame.Util;
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -72,7 +71,9 @@ namespace HoofGame.Player
             if (Vector2.Distance(_startPos, ClickPos) < _minDistance)
             {
                 _hoof.RollbackState();
+                return;
             }
+            _hoof.UpdateDirtPerncent();
         }
 
         private void OnClickHandler(InputAction.CallbackContext _)
