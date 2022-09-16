@@ -31,7 +31,7 @@ namespace HoofGame.UI
             _anim?.Kill();
             _anim = DOTween.Sequence()
                 .Append(_canvasGroup.DOFade(1f, 0.1f))
-                .Append(_canvasGroup.DOFade(0f, 0.25f).SetDelay(1f))
+                .Append(_canvasGroup.DOFade(0f, 0.25f).SetDelay(0.5f))
                 .OnComplete(() => gameObject.SetActive(false));
         }
     }

@@ -5,7 +5,6 @@ using HoofGame.Util;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.WSA;
 
 namespace HoofGame.Player
 {

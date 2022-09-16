@@ -48,6 +48,7 @@ namespace HoofGame.Horse
                 _currentSpiral.transform.SetParent(null);
                 _currentSpiral.isKinematic = false;
                 _currentSpiral.constraints = RigidbodyConstraints.None;
+                _currentSpiral.AddForce(Vector3.up, ForceMode.Impulse);
                 _currentSpiral = null;
             }
             gameObject.SetActive(false);

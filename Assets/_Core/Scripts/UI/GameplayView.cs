@@ -10,6 +10,7 @@ namespace HoofGame.UI
     {
         [SerializeField] private ProgressBar _progressBar;
         [SerializeField] private WarningText _warning;
+        [SerializeField] private CongratsText _congratsText;
         [SerializeField] private CinemachineShake _shake;
 
         private Hoof _hoof;
@@ -34,19 +35,20 @@ namespace HoofGame.UI
 
         private void UpdateProgress(float percent)
         {
+            _congratsText.ShowText();
             _progressBar.SetProgress(1f - percent);
         }
 
         private void OnTooFastHandler()
         {
             _warning.ShowTooFastWarning();
-            _shake.Shake(1f, .25f);
+            _shake.Shake(0.5f, .25f);
         }
 
         private void OnSmallRangeHandler()
         {
             _warning.ShowRangeWarning();
-            _shake.Shake(1f, .25f);
+            _shake.Shake(0.5f, .25f);
         }
     }
 }

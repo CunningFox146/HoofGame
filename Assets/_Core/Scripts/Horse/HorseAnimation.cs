@@ -10,6 +10,7 @@ namespace HoofGame.Horse
         private static readonly int LooseHash = Animator.StringToHash("Loose");
 
         [SerializeField] private Animator _animator;
+        [SerializeField] private ParticleSystem _winParticles;
 
         internal void StandUp()
         {
@@ -19,6 +20,7 @@ namespace HoofGame.Horse
         internal void StartWin()
         {
             _animator.SetTrigger(WinHash);
+            _winParticles.Play();
         }
     }
 }

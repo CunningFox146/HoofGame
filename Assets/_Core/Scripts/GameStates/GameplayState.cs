@@ -1,8 +1,13 @@
-﻿using HoofGame.Cameras;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using HoofGame.Cameras;
 using HoofGame.Horse;
 using HoofGame.Infrastructure;
 using HoofGame.Levels;
 using HoofGame.UI;
+using System;
+using UnityEngine;
+using CameraType = HoofGame.Cameras.CameraType;
 
 namespace HoofGame.GameStates
 {
@@ -29,7 +34,7 @@ namespace HoofGame.GameStates
         public void OnEnter()
         {
             _cameraSystem.SetCamera(CameraType.Gameplay);
-            _hoof.gameObject.SetActive(true);
+            AnimateHoof();
             _horse.StandUp();
             _viewSystem.HideAllViews();
             _viewSystem.ShowView<GameplayView>();
@@ -37,9 +42,25 @@ namespace HoofGame.GameStates
             _hoof.DirtPercentChanged += OnCleanPercentChanged;
         }
 
+        private void AnimateHoof()
+        {
+            _hoof.transform.eulerAngles = Vector3.right * 90f;
+            _hoof.transform.localScale = Vector3.zero;
+            _hoof.gameObject.SetActive(true);
+
+            DOTween.Sequence()
+                .Append(_hoof.transform.DOScale(Vector3.one, 0.5f))
+                .Join(_hoof.transform.DORotate(Vector3.zero, 0.5f))
+                .SetDelay(1f);
+        }
+
         public void OnExit()
         {
             _hoof.gameObject.SetActive(true);
+            DOTween.Sequence()
+                .Append(_hoof.transform.DOScale(Vector3.zero, 0.5f))
+                .Join(_hoof.transform.DORotate(Vector3.right * 90f, 0.5f))
+                .SetDelay(0.75f);
             _hoof.DirtPercentChanged -= OnCleanPercentChanged;
         }
 
